@@ -38,16 +38,15 @@ class WCTrackPlayer extends HTMLElement {
     prepare() {
 
         // set up the different audio nodes we will use for this track player
-        this._sourceNode = this.audioCtx.createBufferSource();
+        // source node will be create on start
         this._pannerNode = this.audioCtx.createStereoPanner();
         this._gainNode   = this.audioCtx.createGain();
 
         // connect nodes
-        this._sourceNode.connect(this._pannerNode);
         this._pannerNode.connect(this._gainNode);
         this._gainNode.connect(mixer);
 
-        
+        // load buffer
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
 
@@ -57,7 +56,6 @@ class WCTrackPlayer extends HTMLElement {
                 return this.audioCtx.decodeAudioData(read.target.result)
                     .then(decodedData => {
                         this.buffer = decodedData;
-                        this._sourceNode.buffer = this.buffer;
                         
                         console.log("buffer fulled!");
                         
@@ -82,11 +80,16 @@ class WCTrackPlayer extends HTMLElement {
         } else {
             const offscreen = canvas.transferControlToOffscreen();
             const worker = new Worker('js/worker.js');
-            worker.postMessage({ canvas: offscreen, buffer: pcm }, [offscreen, pcm.buffer]); // transferrable arraybuffers
+            worker.postMessage({ canvas: offscreen, buffer: pcm }, [offscreen]); // transferrable arraybuffers
         }
     }
 
     start() {
+        // recreate source node and connect
+        this._sourceNode = this.audioCtx.createBufferSource();
+        this._sourceNode.buffer = this.buffer;
+        this._sourceNode.connect(this._pannerNode);
+
         this._sourceNode.start(0);
     }
 

@@ -29,14 +29,11 @@ body {
     }
 
     body[data-status='error'] #main-player .player-left,
-    body[data-status='waiting'] #main-player .player-left {
+    body[data-status='waiting'] #main-player .player-left,
+    body[data-status='playing'] #main-player #btn-play { 
         opacity: 0.3;
         pointer-events: none;
     }
-
-    #main-player #btn-pause { display: none; }
-    body[data-status='playing'] #main-player #btn-pause { display: initial; }
-    body[data-status='playing'] #main-player #btn-play { display: none; }
 
 
 #wrap-editor {
