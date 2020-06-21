@@ -1,3 +1,8 @@
+## Why (super) Vainilla JS?
+Amamos todo lo relacionado con Tooling y FW's JS, pero este proyecto fué armado con fines educativos y nuestro interés es que no se pierde el punto central. Cada uno/a lo puede aplicar en su framework favorito. 
+
+Para correrlo simplemente copia la carpeta en tu web server favorito, o si tenés **npm** simplemente ejecuta: `npm run start`. Este comando levantará el proyecto en _localhost:8080_.
+
 ### Load with fetch
 
 ```JS
