@@ -10,7 +10,7 @@ class WCTrackPlayer extends HTMLElement {
         this.isMuted = false;
         this.isSolo = false;
 
-        this.runOnMainThread = false;
+        this.runOnMainThread = true;
     }
 
     connectedCallback() {
@@ -80,7 +80,7 @@ class WCTrackPlayer extends HTMLElement {
         } else {
             const offscreen = canvas.transferControlToOffscreen();
             const worker = new Worker('js/worker.js');
-            worker.postMessage({ canvas: offscreen, buffer: pcm }, [offscreen]); // transferrable arraybuffers
+            worker.postMessage({ canvas: offscreen, buffer: pcm }, [offscreen]); // transferable arraybuffer
         }
     }
 

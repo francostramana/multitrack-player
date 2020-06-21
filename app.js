@@ -51,12 +51,12 @@ function init() {
 
 function newMedia() {
   console.log("New media prepared...");
-
-  stop();
   
+  stop();  
+  clear();
   media = [];
+  
   setStatus('waiting');
-  renderTracks();
 }
 
 
@@ -66,20 +66,21 @@ function load(files) {
   let startTime = (new Date).getTime();
 
   // create media tracks
-  files.forEach(file => {
+  for (let file of files) {
+
+    // create track and append to view
     const track = new WCTrackPlayer(file, audioCtx);
     track.addEventListener('soloToggled', e => setSolo(e.srcElement, e.detail.active));
+    render(track);
     
     aTracks.push(track.prepare());
     media.push(track);
-  });
+  }
 
-  // append to view
-  renderTracks();
 
   Promise.all(aTracks)
     .then(e => {
-      setStatus('prepared');
+      enablePlayer();
 
       let timeDiff = (new Date).getTime() - startTime; //in ms
       console.log(`Time to player enabled: ${timeDiff}ms`);
@@ -105,8 +106,8 @@ function stop() {
 
 function setSolo(currentTrack, active) {
   media
-  .filter(track => track != currentTrack)
-  .forEach(track => track.mute(active));
+    .filter(track => track != currentTrack)
+    .forEach(track => track.mute(active));
 }
 
 function setGain(value) {
@@ -131,9 +132,16 @@ function setStatus(status) {
   body.dataset.status = status;
 }
 
-function renderTracks() {
+function render(track) {
+  document.querySelector("#wrap-editor").appendChild(track);
+}
+
+function clear() {
   const wrap = document.querySelector("#wrap-editor");
   wrap.textContent = '';
-  media.forEach(track => wrap.appendChild(track));
+}
+
+function enablePlayer() {
+  setStatus('prepared');
 }
 
