@@ -1,0 +1,31 @@
+{
+  "name": "multitrack-player",
+  "version": "1.0.0",
+  "description": "HTML5 Multitrack Player using OMT (off the main thread)",
+  "main": "app.js",
+  "scripts": {
+    "start": "http-server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/francostramana/multitrack-player.git"
+  },
+  "keywords": [
+    "html5",
+    "webaudio",
+    "workers",
+    "js",
+    "omt",
+    "threads"
+  ],
+  "author": "Franco Stramana",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/francostramana/multitrack-player/issues"
+  },
+  "homepage": "https://github.com/francostramana/multitrack-player#readme",
+  "dependencies": {
+    "http-server": "^0.12.3"
+  }
+}
