@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multitrack Audio Player</title>
+    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- load custom web components -->
+    <script src="components/dropzone.component.js"></script>
+    <script src="components/track-player.component.js"></script>
+
+    <!-- load custom modules -->
+    <script src="js/waveform.js"></script>
+
+</head>
+<body>
+
+    <wc-dropzone id="main-dropzone"></wc-dropzone>
+
+    <section id="main-player" class="border-solid border-b border-t border-gray-400 bg-gray-100">
+        <div class="player-left flex mr-2">
+            <button id="btn-play" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l">
+                PLAY
+            </button>
+            <button id="btn-pause" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l">
+                PAUSE
+            </button>
+            <button id="btn-stop" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r">
+                STOP
+            </button>
+        </div>
+        <div class="tool-level mt-1">
+            <input type="range" name="gain-control" id="gain-control" min="0" max="100" value="100" class="w-full"/>
+            <input type="range" name="pan-control" id="pan-control" min="-100" max="100" value="0" class="w-full"/> 
+        </div>
+        <div class="player-right flex ml-auto">
+            <button id="btn-new" class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-6 border border-blue-500 hover:border-transparent rounded">
+                NEW
+            </button>       
+        </div>
+    </section>
+
+    <section id="wrap-editor">
+        <!-- #for each file: <wc-track-player></wc-track-player> -->
+    </section>
+
+
+    <script src="app.js"></script>
+</body>
+</html>

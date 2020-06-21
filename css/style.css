@@ -1,0 +1,47 @@
+:root {
+    --color-primary: #3498db;
+    --color-primary-rgb: rgb(52, 152, 219);
+}
+
+button:focus {
+    outline: 0;
+}
+
+body {
+    display: grid;
+    max-height: 100vh;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto 1fr;
+
+    overflow: hidden;
+}
+
+#main-player {
+    display: flex;
+    padding: 10px;
+}
+
+.player-left {
+    width: 220px;
+}
+    .player-left button {
+        flex: 1;
+    }
+
+    body[data-status='error'] #main-player .player-left,
+    body[data-status='waiting'] #main-player .player-left {
+        opacity: 0.3;
+        pointer-events: none;
+    }
+
+    #main-player #btn-pause { display: none; }
+    body[data-status='playing'] #main-player #btn-pause { display: initial; }
+    body[data-status='playing'] #main-player #btn-play { display: none; }
+
+
+#wrap-editor {
+    margin: 5px;
+    height: 100%;
+    overflow-y: auto;
+}
+
