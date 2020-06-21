@@ -56,7 +56,8 @@ class WCTrackPlayer extends HTMLElement {
                 // decoded data
                 return this.audioCtx.decodeAudioData(read.target.result)
                     .then(decodedData => {
-                        this._sourceNode.buffer = decodedData;
+                        this.buffer = decodedData;
+                        this._sourceNode.buffer = this.buffer;
                         
                         console.log("buffer fulled!");
                         

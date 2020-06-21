@@ -20,6 +20,7 @@ const analyser = audioCtx.createAnalyser();
 // ui
 let btnNew = document.querySelector('#btn-new');
 let btnPlay = document.querySelector('#btn-play');
+let btnPause = document.querySelector('#btn-pause');
 let btnStop = document.querySelector('#btn-stop');
 let btnGainControl = document.querySelector('#gain-control');
 let btnPanControl = document.querySelector('#pan-control');
@@ -27,6 +28,7 @@ let btnPanControl = document.querySelector('#pan-control');
 // handlers
 btnNew.addEventListener('click', newMedia);
 btnPlay.addEventListener('click', play);
+btnPause.addEventListener('click', pause);
 btnStop.addEventListener('click', stop);
 btnGainControl.addEventListener('input', e => setGain(e.target.value));
 btnPanControl.addEventListener('input', e => setPan(e.target.value));
@@ -95,8 +97,15 @@ function play() {
   setStatus('playing');
 }
 
+function pause() {
+  media.forEach(track => track.pause());
+}
+
 function stop() {
-  media.forEach(track => track.stop());
+  if (audioCtx.state != "suspended") {
+    media.forEach(track => track.stop());
+  }
+
   setStatus('stopped');
 }
 
