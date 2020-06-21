@@ -23,7 +23,7 @@ function display_normal(canvas, pcm) {
     context.globalCompositeOperation = 'lighter';
     context.translate(0, canvasHeight / 2);
     context.globalAlpha = 1; // 0.06
-    for (let i=0; i<  pcm.length; i+=10) {
+    for (let i=0; i<  pcm.length; i+=4) {
         let x = Math.floor (canvasWidth * i / pcm.length);
         let y = pcm[i] * canvasHeight / 2; // mirar GC
         context.beginPath();
