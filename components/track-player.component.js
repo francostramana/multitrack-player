@@ -10,7 +10,7 @@ class WCTrackPlayer extends HTMLElement {
         this.isMuted = false;
         this.isSolo = false;
 
-        this.runOnMainThread = true;
+        this.runOnMainThread = false;
     }
 
     connectedCallback() {
