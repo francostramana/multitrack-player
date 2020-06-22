@@ -10,7 +10,7 @@ class WCTrackPlayer extends HTMLElement {
         this.isMuted = false;
         this.isSolo = false;
 
-        this.runOnMainThread = false;
+        this.runOffMainThread = true;
     }
 
     connectedCallback() {
@@ -74,7 +74,7 @@ class WCTrackPlayer extends HTMLElement {
         let canvas = this.querySelector('.canvas-waveform');
         let pcm = buffer.getChannelData(0); // Float32Array describing left channel  
         
-        if (this.runOnMainThread) {
+        if (!this.runOffMainThread) {
             displayBuffer(canvas, pcm);
             //setTimeout(e => displayBuffer(canvas, pcm), 0);
         } else {
@@ -85,6 +85,11 @@ class WCTrackPlayer extends HTMLElement {
     }
 
     start() {
+
+        if (!this.buffer) {
+            throw new Error("file buffer not loaded yet!");
+        }
+
         // recreate source node and connect
         this._sourceNode = this.audioCtx.createBufferSource();
         this._sourceNode.buffer = this.buffer;
