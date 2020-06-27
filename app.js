@@ -31,6 +31,9 @@ btnStop.addEventListener('click', stop);
 btnGainControl.addEventListener('input', e => setGain(e.target.value));
 btnPanControl.addEventListener('input', e => setPan(e.target.value));
 
+document.addEventListener('contextmenu', e => e.preventDefault());
+
+
 // dropzone
 document.querySelector("#main-dropzone").addEventListener('filesdropped', e => load(e.detail));
 
