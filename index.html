@@ -7,9 +7,13 @@
     <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 
+    <!-- wams-->
+    <link rel="preload" href="./wasm/filter.js" as="script" />
+    <script type="module" src="wasm/filter.js"></script>
+
     <!-- load custom web components -->
-    <script src="components/dropzone.component.js"></script>
-    <script src="components/track-player.component.js"></script>
+    <script type="module" src="components/dropzone.component.js"></script>
+    <script type="module" src="components/track-player.component.js"></script>
 
     <!-- load custom modules -->
     <script src="js/waveform.js"></script>
@@ -44,6 +48,6 @@
     </section>
 
 
-    <script src="app.js"></script>
+    <script type="module" src="app.js"></script>
 </body>
 </html>

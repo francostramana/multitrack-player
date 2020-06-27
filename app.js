@@ -1,5 +1,7 @@
 "use strict"
 
+import { WCTrackPlayer} from './components/track-player.component.js';
+
 const runOnMainThread = false;
 
 // context audio 
@@ -69,7 +71,7 @@ function load(files) {
   for (let file of files) {
 
     // create track and append to view
-    const track = new WCTrackPlayer(file, audioCtx);
+    const track = new WCTrackPlayer(file, mixer, audioCtx);
     track.addEventListener('soloToggled', e => setSolo(e.srcElement, e.detail.active));
     render(track);
     

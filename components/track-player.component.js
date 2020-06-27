@@ -1,14 +1,19 @@
 "use strict"
 
-class WCTrackPlayer extends HTMLElement {
+import { applyAmp } from '../wasm/filter.js';
 
-    constructor(file, audioCtx) {
+export class WCTrackPlayer extends HTMLElement {
+
+    constructor(file, mixer, audioCtx) {
         super();
+
+        this.mixer = mixer;
         this.audioCtx = audioCtx;
         this.file = file;
 
         this.isMuted = false;
         this.isSolo = false;
+        this.isAmp = false;
 
         this.runOffMainThread = true;
     }
@@ -19,6 +24,7 @@ class WCTrackPlayer extends HTMLElement {
         // handle events
         this.querySelector('.btn-mute').addEventListener('click', e => this.mute());
         this.querySelector('.btn-solo').addEventListener('click', e => this.solo());
+        this.querySelector('.btn-amp').addEventListener('click', e => this.amp());
 
         this.querySelector('.gain-control').addEventListener('input', e => {
             this._gainNode.gain.value = e.target.value / 100 ;
@@ -44,7 +50,7 @@ class WCTrackPlayer extends HTMLElement {
 
         // connect nodes
         this._pannerNode.connect(this._gainNode);
-        this._gainNode.connect(mixer);
+        this._gainNode.connect(this.mixer);
 
         // load buffer
         return new Promise((resolve, reject) => {
@@ -136,6 +142,23 @@ class WCTrackPlayer extends HTMLElement {
 
     }
 
+    async amp() {
+        this.isAmp = !this.isAmp;
+
+        if (this.isAmp) {
+            for (let i = 0; i < this.buffer.numberOfChannels; i++) {
+                let channelData = this.buffer.getChannelData(i);
+                let channelDataAmp = await applyAmp(channelData);
+                this.buffer.getChannelData(i).set(channelDataAmp);
+            }
+
+            this.querySelector('.track').classList.add('amp');
+        } else {
+            //TODO: back to original buffer
+            this.querySelector('.track').classList.remove('amp');
+        }
+    }
+
     _template() {
         return  `
         <style>
@@ -146,6 +169,7 @@ class WCTrackPlayer extends HTMLElement {
             .track.muted .waveform { opacity: 0.6; }
             .track.muted .btn-mute { background: var(--color-primary); color: white }
             .track.solo  .btn-solo { background: var(--color-primary); color: white }
+            .track.amp   .btn-amp  { background: var(--color-primary); color: white }
 
             .track .controls {
                 background: #e7e7e7;
@@ -182,6 +206,9 @@ class WCTrackPlayer extends HTMLElement {
                         </button>
                         <button class="btn-solo text-sm flex-grow bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r">
                             SOLO
+                        </button>
+                        <button class="btn-amp text-sm flex-grow bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 ml-1 rounded">
+                            A
                         </button>
                     </div>
                     <div class="tool-level mt-1">
