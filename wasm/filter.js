@@ -48,34 +48,40 @@ export const applyAmp = async (samples) => {
   // Create a Uint8Array to give us access to Wasm Memory
   const wasmByteMemoryArray = new Uint8Array(memory.buffer);
 
-  // Get only 1024 samples
-  samples = samples.slice(0, 1024); // TODO: foreach
-
+  // Final amplified samples
   const amplifiedAudioSamples = new Float32Array(samples.length);
 
-  // Convert our float audio samples to a byte format for demonstration purposes
-  const originalByteAudioSamples = floatSamplesToByteSamples(samples);
 
-  // Fill our wasm memory with the converted Audio Samples,
-  // and store it at our INPUT_BUFFER_POINTER (wasm memory index)
-  wasmByteMemoryArray.set(
-    originalByteAudioSamples,
-    exports.INPUT_BUFFER_POINTER.valueOf()
-  );
+  let outputFinalBuffer = new Uint8Array(samples.length); 
+  for (let i = 1024; i < samples.length; i += 1024) {
+    let subSamples = samples.slice(i-1024, i);
+    
+    // Convert our float audio samples to a byte format for demonstration purposes
+    const originalByteAudioSamples = floatSamplesToByteSamples(subSamples);
 
-  // Amplify our loaded samples with our export Wasm function
-  exports.amplifyAudioInBuffer();
+    // Fill our wasm memory with the converted Audio Samples,
+    // and store it at our INPUT_BUFFER_POINTER (wasm memory index)
+    wasmByteMemoryArray.set(
+      originalByteAudioSamples,
+      exports.INPUT_BUFFER_POINTER.valueOf()
+    );
 
-  // Slice out the amplified byte audio samples
-  const outputBuffer = wasmByteMemoryArray.slice(
-    exports.OUTPUT_BUFFER_POINTER.valueOf(),
-    exports.OUTPUT_BUFFER_POINTER.valueOf() +
-      exports.OUTPUT_BUFFER_SIZE.valueOf()
-  );
+    // Amplify our loaded samples with our export Wasm function
+    exports.amplifyAudioInBuffer();
+
+    // Slice out the amplified byte audio samples
+    const outputBuffer = wasmByteMemoryArray.slice(
+      exports.OUTPUT_BUFFER_POINTER.valueOf(),
+      exports.OUTPUT_BUFFER_POINTER.valueOf() +
+        exports.OUTPUT_BUFFER_SIZE.valueOf()
+    );
+
+    outputFinalBuffer.set(outputBuffer, i - 1024);
+  }
 
   // Convert our amplified byte samples into float samples,
   // and set the outputBuffer to our amplifiedAudioSamples
-  amplifiedAudioSamples.set(byteSamplesToFloatSamples(outputBuffer));
+  amplifiedAudioSamples.set(byteSamplesToFloatSamples(outputFinalBuffer));
 
   // Return new samples
   return Promise.resolve(amplifiedAudioSamples);
