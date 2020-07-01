@@ -62,8 +62,9 @@ export class WCTrackPlayer extends HTMLElement {
                 return this.audioCtx.decodeAudioData(read.target.result)
                     .then(decodedData => {
                         this.buffer = decodedData;
+                        this.original = this._clone(this.buffer);
                         
-                        console.log("buffer fulled!");
+                        console.log("buffers fulled!");
                         
                         this._drawWaveform(decodedData);
                         
@@ -77,7 +78,12 @@ export class WCTrackPlayer extends HTMLElement {
     }
 
     _drawWaveform(buffer) {
-        let canvas = this.querySelector('.canvas-waveform');
+        const canvas = document.createElement("canvas");
+        canvas.width = 1600; //TODO: set width relative to duration
+        canvas.height = 120; 
+         
+        this.querySelector('.waveform').replaceChild(canvas, this.querySelector('.waveform canvas'));
+
         let pcm = buffer.getChannelData(0); // Float32Array describing left channel  
         
         if (!this.runOffMainThread) {
@@ -119,8 +125,7 @@ export class WCTrackPlayer extends HTMLElement {
             this.snapGain = this._gainNode.gain.value;
             this._gainNode.gain.value = 0;
             this.querySelector('.track').classList.add('muted');
-        }
-        else {
+        } else {
             this._gainNode.gain.value = this.snapGain;
             this.querySelector('.track').classList.remove('muted');
         }
@@ -155,8 +160,29 @@ export class WCTrackPlayer extends HTMLElement {
             this.querySelector('.track').classList.add('amp');
         } else {
             //TODO: back to original buffer
+            for (let i = 0; i < this.buffer.numberOfChannels; i++) {
+                this.buffer.getChannelData(i).set(this.original.getChannelData(i));
+            }
+
             this.querySelector('.track').classList.remove('amp');
         }
+
+        this._drawWaveform(this.buffer);
+
+    }
+
+    _clone(buffer) {
+        const bufferClone = this.audioCtx.createBuffer(
+            buffer.numberOfChannels,
+            buffer.length,
+            buffer.sampleRate);
+
+        for (let i = 0; i < this.buffer.numberOfChannels; i++) {
+            bufferClone.copyToChannel(buffer.getChannelData(i), i)
+        }
+
+        return bufferClone;
+
     }
 
     _template() {
