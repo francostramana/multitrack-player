@@ -1,14 +1,19 @@
 "use strict"
 
-class WCTrackPlayer extends HTMLElement {
+import { applyAmp } from '../wasm/filter.js';
 
-    constructor(file, audioCtx) {
+export class WCTrackPlayer extends HTMLElement {
+
+    constructor(file, mixer, audioCtx) {
         super();
+
+        this.mixer = mixer;
         this.audioCtx = audioCtx;
         this.file = file;
 
         this.isMuted = false;
         this.isSolo = false;
+        this.isAmp = false;
 
         this.runOffMainThread = true;
     }
@@ -19,6 +24,7 @@ class WCTrackPlayer extends HTMLElement {
         // handle events
         this.querySelector('.btn-mute').addEventListener('click', e => this.mute());
         this.querySelector('.btn-solo').addEventListener('click', e => this.solo());
+        this.querySelector('.btn-amp').addEventListener('click', e => this.amp());
 
         this.querySelector('.gain-control').addEventListener('input', e => {
             this._gainNode.gain.value = e.target.value / 100 ;
@@ -44,7 +50,7 @@ class WCTrackPlayer extends HTMLElement {
 
         // connect nodes
         this._pannerNode.connect(this._gainNode);
-        this._gainNode.connect(mixer);
+        this._gainNode.connect(this.mixer);
 
         // load buffer
         return new Promise((resolve, reject) => {
@@ -56,8 +62,9 @@ class WCTrackPlayer extends HTMLElement {
                 return this.audioCtx.decodeAudioData(read.target.result)
                     .then(decodedData => {
                         this.buffer = decodedData;
+                        this.original = this._clone(this.buffer);
                         
-                        console.log("buffer fulled!");
+                        console.log("buffers fulled!");
                         
                         this._drawWaveform(decodedData);
                         
@@ -71,7 +78,12 @@ class WCTrackPlayer extends HTMLElement {
     }
 
     _drawWaveform(buffer) {
-        let canvas = this.querySelector('.canvas-waveform');
+        const canvas = document.createElement("canvas");
+        canvas.width = 1600; //TODO: set width relative to duration
+        canvas.height = 120; 
+         
+        this.querySelector('.waveform').replaceChild(canvas, this.querySelector('.waveform canvas'));
+
         let pcm = buffer.getChannelData(0); // Float32Array describing left channel  
         
         if (!this.runOffMainThread) {
@@ -113,8 +125,7 @@ class WCTrackPlayer extends HTMLElement {
             this.snapGain = this._gainNode.gain.value;
             this._gainNode.gain.value = 0;
             this.querySelector('.track').classList.add('muted');
-        }
-        else {
+        } else {
             this._gainNode.gain.value = this.snapGain;
             this.querySelector('.track').classList.remove('muted');
         }
@@ -136,6 +147,44 @@ class WCTrackPlayer extends HTMLElement {
 
     }
 
+    async amp() {
+        this.isAmp = !this.isAmp;
+
+        if (this.isAmp) {
+            for (let i = 0; i < this.buffer.numberOfChannels; i++) {
+                let channelData = this.buffer.getChannelData(i);
+                let channelDataAmp = await applyAmp(channelData);
+                this.buffer.getChannelData(i).set(channelDataAmp);
+            }
+
+            this.querySelector('.track').classList.add('amp');
+        } else {
+            //TODO: back to original buffer
+            for (let i = 0; i < this.buffer.numberOfChannels; i++) {
+                this.buffer.getChannelData(i).set(this.original.getChannelData(i));
+            }
+
+            this.querySelector('.track').classList.remove('amp');
+        }
+
+        this._drawWaveform(this.buffer);
+
+    }
+
+    _clone(buffer) {
+        const bufferClone = this.audioCtx.createBuffer(
+            buffer.numberOfChannels,
+            buffer.length,
+            buffer.sampleRate);
+
+        for (let i = 0; i < this.buffer.numberOfChannels; i++) {
+            bufferClone.copyToChannel(buffer.getChannelData(i), i)
+        }
+
+        return bufferClone;
+
+    }
+
     _template() {
         return  `
         <style>
@@ -146,6 +195,7 @@ class WCTrackPlayer extends HTMLElement {
             .track.muted .waveform { opacity: 0.6; }
             .track.muted .btn-mute { background: var(--color-primary); color: white }
             .track.solo  .btn-solo { background: var(--color-primary); color: white }
+            .track.amp   .btn-amp  { background: var(--color-primary); color: white }
 
             .track .controls {
                 background: #e7e7e7;
@@ -182,6 +232,9 @@ class WCTrackPlayer extends HTMLElement {
                         </button>
                         <button class="btn-solo text-sm flex-grow bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r">
                             SOLO
+                        </button>
+                        <button class="btn-amp text-sm flex-grow bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 ml-1 rounded">
+                            A
                         </button>
                     </div>
                     <div class="tool-level mt-1">
