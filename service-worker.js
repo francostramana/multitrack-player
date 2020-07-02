@@ -15,7 +15,7 @@ const filesToCache = [
 const staticCacheName = 'cache-v1';
 
 self.addEventListener('install', (event) => {
-  //console.log('Attempting to install service worker and cache static assets');
+  console.log('Attempting to install service worker and cache static assets');
   event.waitUntil(
     caches.open(staticCacheName)
     .then(cache => {
@@ -23,12 +23,27 @@ self.addEventListener('install', (event) => {
     })
   );
 
+  // to avoid waiting
   self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
-  //console.log('👷', 'activate', event);
-  return self.clients.claim();
+
+  // Delete outdated caches
+  const cacheWhitelist = [staticCacheName];
+
+  event.waitUntil(
+    caches.keys().then(cacheNames => 
+      Promise.all(
+        cacheNames.map(cacheName => {
+          if (cacheWhitelist.indexOf(cacheName) === -1) {
+            return caches.delete(cacheName);
+          }
+        })
+      )
+    )
+  );
+
 });
 
 self.addEventListener('fetch', event => {
