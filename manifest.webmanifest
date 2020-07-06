@@ -6,8 +6,8 @@
  "background_color": "#4299e1",
  "theme_color": "#4299e1",
  "display": "standalone",
- "start_url": "/",
- "scope": "/",
+ "start_url": "https://francostramana.github.io/multitrack-player/",
+ "scope": "https://francostramana.github.io/multitrack-player/",
  "icons": [
   {
     "src": "/assets/app-icons/icon-512x512.png",
