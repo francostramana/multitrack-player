@@ -1,7 +1,7 @@
 // Imports are from the demo-util folder in the repo
 // https://github.com/torch2424/wasm-by-example/blob/master/demo-util/
 
-import { wasmBrowserInstantiate } from "/wasm/instantiateWasm.js";
+import { wasmBrowserInstantiate } from "../wasm/instantiateWasm.js";
 
 
 // Function to convert float samples to byte samples
