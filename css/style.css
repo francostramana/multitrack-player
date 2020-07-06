@@ -42,3 +42,14 @@ body {
     overflow-y: auto;
 }
 
+
+@media (max-width: 600px) {
+    .track {
+        flex-direction: column;
+    }
+
+    .track .waveform {height: 70px;}
+
+    .track .controls {width: 100% !important;}
+}
+
