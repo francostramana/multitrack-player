@@ -190,8 +190,8 @@ export class WCTrackPlayer extends HTMLElement {
         <style>
             .track {
                 display: flex;
-            }
-
+            }       
+            
             .track.muted .waveform { opacity: 0.6; }
             .track.muted .btn-mute { background: var(--color-primary); color: white }
             .track.solo  .btn-solo { background: var(--color-primary); color: white }
