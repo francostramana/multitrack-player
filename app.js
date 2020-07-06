@@ -33,6 +33,7 @@ btnStop.addEventListener('click', stop);
 btnGainControl.addEventListener('input', e => setGain(e.target.value));
 btnPanControl.addEventListener('input', e => setPan(e.target.value));
 
+// disabled context menu
 document.addEventListener('contextmenu', e => e.preventDefault());
 
 
