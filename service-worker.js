@@ -3,7 +3,7 @@
 const filesToCache = [
   '/',
   'css/style.css',
-  'css/tailwind-1.4.6.min.css',
+  'https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css',
   'components/dropzone.component.js',
   'components/track-player.component.js',
   'js/waveform.js',
