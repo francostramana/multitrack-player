@@ -61,7 +61,7 @@ self.addEventListener('fetch', event => {
       // TODO - Add fetched files to the cache
 
     }).catch(error => {
-      console.log(e);
+      console.log(error);
     })
   );
 });
