@@ -1,7 +1,7 @@
 "use strict"
 
 const filesToCache = [
-  '/multitrack-player',
+  '/multitrack-player/',
   'css/style.css',
   'https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css',
   'components/dropzone.component.js',
@@ -12,7 +12,7 @@ const filesToCache = [
   'index.html',
 ];
 
-const staticCacheName = 'cache-v1';
+const staticCacheName = 'cache-v2';
 
 self.addEventListener('install', (event) => {
   console.log('Attempting to install service worker and cache static assets');
