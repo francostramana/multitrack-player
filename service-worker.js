@@ -13,6 +13,7 @@ const filesToCache = [
 ];
 
 const staticCacheName = 'cache-v2';
+const networkOnly = false;
 
 self.addEventListener('install', (event) => {
   console.log('Attempting to install service worker and cache static assets');
@@ -48,7 +49,9 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', event => {
   //console.log('Fetch event for ', event.request.url);
+  
   event.respondWith(
+    networkOnly ? fetch(event.request) : 
     caches.match(event.request)
     .then(response => {
       if (response) {
@@ -56,7 +59,7 @@ self.addEventListener('fetch', event => {
         return response;
       }
       console.log('Network request for ', event.request.url);
-      return fetch(event.request)
+      return fetch(event.request);
 
       // TODO - Add fetched files to the cache
 
