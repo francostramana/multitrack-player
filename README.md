@@ -1,7 +1,16 @@
-## Why (super) Vainilla JS?
+# Multitrack Audio Player
+Este proyecto fue creado con fines educativos para abarcar algunos aspectos relacionados con la **performance web**.
+
+## Qué vamos a hacer?
+- "Off the Main Thread": Usaremos Web Workers para procesar tareas con gran costo computacional fuera del hilo principal asi no bloqueamos la UI. (Threading)
+- Web Assembly: Vamos a compilar y correr nuestro propio código c++ para usarlo desde JS.
+- PWA: Vamos a convertir nuestra aplicación en una aplicación web progresiva para mejorar la usabilidad.
+
+## Por qué (super) Vainilla JS?
 Amamos todo lo relacionado con Tooling y FW's JS, pero este proyecto fué armado con fines educativos y nuestro interés es que no se pierde el punto central. Cada uno/a lo puede aplicar en su framework favorito. 
 
 Para correrlo simplemente copiá la carpeta en tu web server favorito, o si tenés **npm** ejecuta: `npm run start` (previamente instala dependencias con `npm install`). Este comando levantará el proyecto en _http://localhost:8080_.
+
 
 ### Load with fetch
 
