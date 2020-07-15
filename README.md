@@ -12,6 +12,9 @@ Amamos todo lo relacionado con Tooling y FW's JS, pero este proyecto fué armado
 ## Run
 Para correrlo simplemente copiá la carpeta en tu web server favorito, o si tenés **npm** ejecuta: `npm run start` (previamente instala dependencias con `npm install`). Este comando levantará el proyecto en _http://localhost:8080_.
 
+### Dataset ejemplo
+Podés usar este multitrack de The Beatles para probar la app: https://drive.google.com/drive/u/0/folders/1VrBsuHtpYQ8r0kDX7Ugtx7gNuN3aCjUL
+
 
 ### Load with fetch
 
