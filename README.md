@@ -9,6 +9,7 @@ Este proyecto fue creado con fines educativos para abarcar algunos aspectos rela
 ## Por qué (super) Vainilla JS?
 Amamos todo lo relacionado con Tooling y FW's JS, pero este proyecto fué armado con fines educativos y nuestro interés es que no se pierde el punto central. Cada uno/a lo puede aplicar en su framework favorito. 
 
+## Run
 Para correrlo simplemente copiá la carpeta en tu web server favorito, o si tenés **npm** ejecuta: `npm run start` (previamente instala dependencias con `npm install`). Este comando levantará el proyecto en _http://localhost:8080_.
 
 
